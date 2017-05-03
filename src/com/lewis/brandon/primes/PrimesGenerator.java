@@ -9,7 +9,7 @@ public class PrimesGenerator implements PrimeNumberGenerator {
 	
 	public static void main(String[] args) {
 		PrimesGenerator pg = new PrimesGenerator();
-		pg.generate(10, 1).forEach(System.out::println);
+		pg.generate(20, 1).forEach(System.out::println);
 	}
 
 	/**
