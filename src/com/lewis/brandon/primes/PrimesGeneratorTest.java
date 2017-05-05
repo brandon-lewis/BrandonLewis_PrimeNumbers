@@ -20,8 +20,18 @@ public class PrimesGeneratorTest {
 	// ==================================================
 
 	@Test
+	public void testZerosNotPrime() {
+		assertFalse(pg.isPrime(0));
+	}
+
+	@Test
 	public void testOneIsNotPrime() {
 		assertFalse(pg.isPrime(1));
+	}
+
+	@Test
+	public void testTwoIsPrime() {
+		assertFalse(pg.isPrime(2));
 	}
 
 	@Test
@@ -53,25 +63,34 @@ public class PrimesGeneratorTest {
 	// ==================================================
 	// 					isPrime
 	// ==================================================
-	@Test(expected=IllegalArgumentException.class)
-	public void testIsPrimeRejectsNegativeNumbers() {
+	@Test
+	public void testIsPrimeReturnsFalseForNegativeNumbers() {
 		assertFalse(pg.isPrime(-84));
 	}
 
 	@Test
-	public void testIsPrimeInvokedBeforeGenerateCalculatesProperly() {
+	public void testIsPrimNotDependentOnPreviousInvocationOfGenerateMethod() {
 		assertTrue(pg.isPrime(7919));
 	}
 	
 	// ==================================================
 	// 					generate
 	// ==================================================
+
+	@Test
+	public void testGenerateAcceptsSameNumbers() {
+		List<Integer> expected = Arrays.asList(11);
+		List<Integer> primes = pg.generate(11, 11);
+		assertTrue(primes.equals(expected));
+	}
+	
 	@Test
 	public void testGeneratorHandlesInverseRanges() {
 		List<Integer> expected = Arrays.asList(2,3,5,7);
 		List<Integer> primes = pg.generate(10, 1);
 		assertTrue(primes.equals(expected));
 	}
+	
 	@Test
 	public void testGeneratorInverseRangesReturnsSameResultsAsStandardRanges() {
 		List<Integer> standard = pg.generate(1, 200);

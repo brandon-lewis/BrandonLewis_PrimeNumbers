@@ -87,13 +87,11 @@ public class PrimesGenerator implements PrimeNumberGenerator {
 	 * Returns a boolean value indicating whether the provided number is prime.
 	 * 
 	 * @param value		the number to be check for primality
-	 * @return			<code>true</code> if the number was determined to be prime; false if not prime
+	 * @return			<code>true</code> if <b>value</b> is determined to be prime; false if not prime or if <b>value</b> is a negative number
 	 */
 	@Override
 	public boolean isPrime(int value) {
-		if(value < 1) {
-			throw new IllegalArgumentException("Negative numbers not supported, as Prime numbers are non-negative integers greater than 0");
-		} else if(value == 1) {
+		if(value <= 1) {
 			return false;
 		} else if(value <= 3) {
 			return true;
