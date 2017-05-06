@@ -14,7 +14,7 @@ import org.junit.Test;
 
 /**
  * @author	Brandon Lewis
- * @since	May 3, 2017
+ * @since	May 5, 2017
  */
 public class HybridGeneratorTest {
 	PrimeNumberGenerator png;

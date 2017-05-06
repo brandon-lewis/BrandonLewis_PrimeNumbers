@@ -17,8 +17,8 @@ public class PrimesMain {
 		System.out.println("==========================================");
 		System.out.println("Directions:\n  - Enter a number range (e.g. 7900-7920) to see the prime numbers within that range (inclusive).");
 		System.out.println("  - Type metrics to see the runtime metrics of previous runs.\n  - Type exit to quit.");
-		System.out.print(">> ");
-		String input = br.readLine();
+		String input = getInput(br);
+		
 		while(!input.equals("exit")) {
 			if(input.equals("metrics")) {
 				if(pg.getMetrics().size() == 0) {
@@ -35,17 +35,25 @@ public class PrimesMain {
 				} else {
 					int num1 = Integer.valueOf(matcher.group(1));
 					int num2 = Integer.valueOf(matcher.group(2));
-					List<Integer> primes = pg.generate(num1, num2);
-					if(primes.size() > 0) {
-						System.out.println("The " + primes.size() + " Prime Numbers Between " + num1 + " and " + num2 + " are:");
-						System.out.println("\t" + primes.toString().replaceAll("\\[|\\]", ""));	
-					} else {
-						System.out.println("There are no Prime Numbers between " + num1 + " and " + num2);
+					try {
+						List<Integer> primes = pg.generate(num1, num2);
+						if(primes.size() > 0) {
+							System.out.println("The " + primes.size() + " Prime Numbers Between " + num1 + " and " + num2 + " are:");
+							System.out.println("\t" + primes.toString().replaceAll("\\[|\\]", ""));	
+						} else {
+							System.out.println("There are no Prime Numbers between " + num1 + " and " + num2);
+						}
+					} catch(IllegalArgumentException iae) {
+						System.out.println("The Prime Number range must not include 0 or negative numbers.");
 					}
 				}
 			}
-			System.out.print("\n>> ");
-			input = br.readLine();
+			input = getInput(br);
 		}
+	}
+	
+	private static String getInput(BufferedReader br) throws IOException {
+		System.out.print("\n>> ");
+		return br.readLine();
 	}
 }

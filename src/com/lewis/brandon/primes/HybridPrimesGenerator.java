@@ -7,6 +7,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * This class calculates/identifies prime numbers by using a mix of Trial Division
+ * and the Sieves of Eratosthenes.
+ * 
+ * @author Brandon
+ * @since May 5, 2017
+ */
 public class HybridPrimesGenerator implements PrimeNumberGenerator {
 	private List<String> metrics = new ArrayList<>();
 	private ConcurrentSkipListSet<Integer> primes = new ConcurrentSkipListSet<>();;
@@ -59,6 +66,8 @@ public class HybridPrimesGenerator implements PrimeNumberGenerator {
 	 * @param startingValue		the number to start generating at (inclusive)
 	 * @param endingValue		the number to stop generating at (inclusive)
 	 * @return 					ordered ArrayList of prime numbers within the given range.
+	 * @throws IllegalArgumentException	if either the <code>startingValue</code> or <code>endingValue</code>
+	 * 							parameters are less than 1
 	 */
 	@Override
 	public List<Integer> generate(int startingValue, int endingValue) {
