@@ -1,18 +1,23 @@
 package com.lewis.brandon.primes;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator {
-	
+public class HybridPrimesGenerator implements PrimeNumberGenerator {
+	private List<String> metrics = new ArrayList<>();
 	private ConcurrentSkipListSet<Integer> primes = new ConcurrentSkipListSet<>();;
 	private int calculatedUpTo = 1;
+	
+	public List<String> getMetrics() { return metrics; }
 	
 	private void generatePrimesBySieveOfEratosthenes(int endingValue) {
 		ConcurrentSkipListSet<Integer> newPrimes;
 		if(calculatedUpTo == 1) {
+			long startTime = Instant.now().toEpochMilli();
 			newPrimes = IntStream.iterate(3, (value) -> value + 2)
 					.limit(endingValue/2).boxed().collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 			newPrimes.add(2);	// Add 2 explicitly, as it's the only even prime
@@ -22,9 +27,14 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 			});
 			
 			primes.addAll(newPrimes);
+
+			metrics.add("M" + (metrics.size() + 1) + ": [" + (Instant.now().toEpochMilli() - startTime) + "ms] Calculated " + newPrimes.size() +
+					" Prime Numbers after testing " + (endingValue - calculatedUpTo) + " values (range: " + calculatedUpTo + " - " + endingValue + ")");
 			
 			calculatedUpTo = endingValue;
+			
 		} else if(endingValue > calculatedUpTo) {
+			long startTime = Instant.now().toEpochMilli();
 			int iterateFrom = calculatedUpTo % 2 == 0 ? calculatedUpTo + 1 : calculatedUpTo;
 			newPrimes = IntStream.iterate(iterateFrom, (value) -> value + 2)
 					.limit((endingValue-calculatedUpTo)/2).boxed().collect(Collectors.toCollection(ConcurrentSkipListSet::new));
@@ -35,6 +45,8 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 			
 			primes.addAll(newPrimes);
 
+			metrics.add("M" + (metrics.size() + 1) + ": [" + (Instant.now().toEpochMilli() - startTime) + "ms] Calculated " + newPrimes.size() +
+					" Prime Numbers after testing " + (endingValue - calculatedUpTo) + " values (range: " + calculatedUpTo + " - " + endingValue + ")");
 			calculatedUpTo = endingValue;
 		}
 	}
@@ -53,6 +65,7 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 		if(startingValue < 1 || endingValue < 1) {
 			throw new IllegalArgumentException("Neither startingValue nor endingValue can be less than 1.");
 		}
+		long startTime = Instant.now().toEpochMilli();
 		// Swap startingValue and endingValue if endingValue is greater than startingValue
 		if(startingValue > endingValue) {
 			int tempValue = startingValue;
@@ -64,6 +77,8 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 		if(endingValueSquareRoot > calculatedUpTo) generatePrimesBySieveOfEratosthenes(endingValueSquareRoot);
 		
 		List<Integer> nums = IntStream.rangeClosed(startingValue, endingValue).filter(num -> isPrime(num)).boxed().collect(Collectors.toList());
+		metrics.add("M" + (metrics.size() + 1) + ": [" + (Instant.now().toEpochMilli() - startTime) + "ms] generate(" + startingValue + ", " + endingValue +
+				") method identifed " + nums.size() + " Prime Numbers");
 		return nums;
 	}
 

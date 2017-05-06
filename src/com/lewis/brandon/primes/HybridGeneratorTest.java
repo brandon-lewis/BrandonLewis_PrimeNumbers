@@ -16,13 +16,13 @@ import org.junit.Test;
  * @author	Brandon Lewis
  * @since	May 3, 2017
  */
-public class TrialDivisionHybridGeneratorTest {
+public class HybridGeneratorTest {
 	PrimeNumberGenerator png;
 	static long startTime;
 	
 	@Before
 	public void before() {
-		png = new TrialDivisionHybridPrimesGenerator();
+		png = new HybridPrimesGenerator();
 	}
 	
 	@BeforeClass
@@ -97,6 +97,12 @@ public class TrialDivisionHybridGeneratorTest {
 	// ==================================================
 
 	@Test
+	public void testGenerateReturnsEmptyListIfNoPrimesFound() {
+		List<Integer> primes = png.generate(7908, 7918);
+		assertTrue(primes.size() == 0);
+	}
+
+	@Test
 	public void testGenerateAcceptsSameNumbers() {
 		List<Integer> expected = Arrays.asList(11);
 		List<Integer> primes = png.generate(11, 11);
@@ -135,7 +141,7 @@ public class TrialDivisionHybridGeneratorTest {
 
 	@Test
 	public void testGeneratingSameRangeDoesNotInvokeRecalculation() {
-		PrimeNumberGenerator pngTemp = new TrialDivisionHybridPrimesGenerator();
+		PrimeNumberGenerator pngTemp = new HybridPrimesGenerator();
 		long startTime = Instant.now().toEpochMilli();
 		pngTemp.generate(1, 100_000);
 		long firstRuntime = Instant.now().toEpochMilli() - startTime;
@@ -149,7 +155,7 @@ public class TrialDivisionHybridGeneratorTest {
 
 	@Test
 	public void testGeneratingForLargerRangeThanPreviousRangesOnlyGeneratesForNewRange() {
-		PrimeNumberGenerator pngTemp = new TrialDivisionHybridPrimesGenerator();
+		PrimeNumberGenerator pngTemp = new HybridPrimesGenerator();
 		long startTime = Instant.now().toEpochMilli();
 		pngTemp.generate(1, 100_000);
 		long firstRuntime = Instant.now().toEpochMilli() - startTime;
