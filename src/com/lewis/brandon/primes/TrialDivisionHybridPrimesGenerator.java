@@ -13,7 +13,6 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 	private void generatePrimesBySieveOfEratosthenes(int endingValue) {
 		ConcurrentSkipListSet<Integer> newPrimes;
 		if(calculatedUpTo == 1) {
-			System.out.println("Generating for the first time.");
 			newPrimes = IntStream.iterate(3, (value) -> value + 2)
 					.limit(endingValue/2).boxed().collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 			newPrimes.add(2);	// Add 2 explicitly, as it's the only even prime
@@ -26,7 +25,6 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 			
 			calculatedUpTo = endingValue;
 		} else if(endingValue > calculatedUpTo) {
-			System.out.println("Regenerating " + calculatedUpTo + " to " + endingValue + ".");
 			int iterateFrom = calculatedUpTo % 2 == 0 ? calculatedUpTo + 1 : calculatedUpTo;
 			newPrimes = IntStream.iterate(iterateFrom, (value) -> value + 2)
 					.limit((endingValue-calculatedUpTo)/2).boxed().collect(Collectors.toCollection(ConcurrentSkipListSet::new));
@@ -38,10 +36,7 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 			primes.addAll(newPrimes);
 
 			calculatedUpTo = endingValue;
-		} else {
-			System.out.println("No generation necessary!");
 		}
-		System.out.println("Primes Size: " + primes.size());
 	}
 
 	/**
@@ -68,7 +63,6 @@ public class TrialDivisionHybridPrimesGenerator implements PrimeNumberGenerator 
 		int endingValueSquareRoot = (int)Math.floor(Math.sqrt(endingValue));
 		if(endingValueSquareRoot > calculatedUpTo) generatePrimesBySieveOfEratosthenes(endingValueSquareRoot);
 		
-		System.out.println("Checking " + startingValue + " to " + endingValue + "...");
 		List<Integer> nums = IntStream.rangeClosed(startingValue, endingValue).filter(num -> isPrime(num)).boxed().collect(Collectors.toList());
 		return nums;
 	}

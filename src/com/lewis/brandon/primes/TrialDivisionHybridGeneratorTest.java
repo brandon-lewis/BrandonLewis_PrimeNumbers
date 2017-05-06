@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,8 +17,13 @@ import org.junit.Test;
  * @since	May 3, 2017
  */
 public class TrialDivisionHybridGeneratorTest {
-	PrimeNumberGenerator png = new TrialDivisionHybridPrimesGenerator();
+	PrimeNumberGenerator png;
 	static long startTime;
+	
+	@Before
+	public void before() {
+		png = new TrialDivisionHybridPrimesGenerator();
+	}
 	
 	@BeforeClass
 	public static void beforeClass() {
@@ -74,25 +80,6 @@ public class TrialDivisionHybridGeneratorTest {
 	}
 	
 	// ==================================================
-	// 					performance
-	//
-	//	Note: Mileage may vary by processing power
-	// ==================================================
-
-	@Test
-	public void testGeneratingSameRangeDoesNotInvokeRecalculation() {
-		PrimeNumberGenerator pngTemp = new TrialDivisionHybridPrimesGenerator();
-		long startTime = Instant.now().toEpochMilli();
-		pngTemp.generate(1, 100_000);
-		long firstRuntime = Instant.now().toEpochMilli() - startTime;
-		
-		startTime = Instant.now().toEpochMilli();
-		pngTemp.generate(1, 100_000);
-		long secondRuntime = Instant.now().toEpochMilli() - startTime;
-		assertTrue(secondRuntime < firstRuntime / 2);
-	}
-
-	// ==================================================
 	// 					isPrime
 	// ==================================================
 	@Test
@@ -138,5 +125,39 @@ public class TrialDivisionHybridGeneratorTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testGeneratorRejectsNegativeEndingValue() {
 		png.generate(10, -1000);
+	}
+
+	// ==================================================
+	// 					performance
+	//
+	//	Note: Mileage may vary by processing power
+	// ==================================================
+
+	@Test
+	public void testGeneratingSameRangeDoesNotInvokeRecalculation() {
+		PrimeNumberGenerator pngTemp = new TrialDivisionHybridPrimesGenerator();
+		long startTime = Instant.now().toEpochMilli();
+		pngTemp.generate(1, 100_000);
+		long firstRuntime = Instant.now().toEpochMilli() - startTime;
+		
+		startTime = Instant.now().toEpochMilli();
+		pngTemp.generate(1, 100_000);
+		long secondRuntime = Instant.now().toEpochMilli() - startTime;
+		System.out.println("1-100,000 1st Run: " + firstRuntime + "ms");
+		System.out.println("1-100,000 2nd Run: " + secondRuntime + "ms");
+	}
+
+	@Test
+	public void testGeneratingForLargerRangeThanPreviousRangesOnlyGeneratesForNewRange() {
+		PrimeNumberGenerator pngTemp = new TrialDivisionHybridPrimesGenerator();
+		long startTime = Instant.now().toEpochMilli();
+		pngTemp.generate(1, 100_000);
+		long firstRuntime = Instant.now().toEpochMilli() - startTime;
+		
+		startTime = Instant.now().toEpochMilli();
+		pngTemp.generate(1, 200_000);
+		long secondRuntime = Instant.now().toEpochMilli() - startTime;
+		System.out.println("1-100,000 Run: " + firstRuntime + "ms");
+		System.out.println("1-200,000 Run: " + secondRuntime + "ms");
 	}
 }
